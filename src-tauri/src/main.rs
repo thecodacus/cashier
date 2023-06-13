@@ -3,13 +3,14 @@
 
 mod modules;
 
+use home;
 use modules::auth::{get_str_hash, login};
 use modules::models::product;
 use modules::models::product::Product;
 use modules::{database::connect_db, models::user, models::user::User};
 use rusqlite::{Connection, Result};
-
-static DATABASE_PATH: &str = "../database.db3";
+use std::fs;
+use std::path::{Path, PathBuf};
 
 fn main() {
     let _ = setup_db();
@@ -27,8 +28,24 @@ fn main() {
         .expect("error while running tauri application");
 }
 
+fn get_database_path() -> String {
+    let mut final_path = PathBuf::from("./database.db3");
+
+    if let Some(home_dir) = home::home_dir() {
+        final_path = Path::new(&home_dir).join(".cashier").join("database.db3");
+
+        if let Some(parent_dir) = final_path.parent() {
+            if !parent_dir.exists() {
+                fs::create_dir_all(parent_dir).unwrap();
+            }
+        }
+    }
+
+    final_path.display().to_string()
+}
+
 fn setup_db() -> Result<()> {
-    let con: Connection = connect_db(DATABASE_PATH);
+    let con: Connection = connect_db(&get_database_path());
     print!("calling setup db \n");
     let sql: &str = "
         CREATE TABLE IF NOT EXISTS products (
@@ -77,19 +94,19 @@ fn setup_db() -> Result<()> {
 
 #[tauri::command]
 fn get_all_products() -> Vec<Product> {
-    let con: Connection = connect_db(DATABASE_PATH);
+    let con: Connection = connect_db(&get_database_path());
     return product::get_all_products(con);
 }
 
 #[tauri::command]
 fn get_product_by_code(code: &str) -> Option<Product> {
-    let con: Connection = connect_db(DATABASE_PATH);
+    let con: Connection = connect_db(&get_database_path());
     return product::get_product_by_code(code, con);
 }
 
 #[tauri::command]
 fn save_product(product: Product) -> Product {
-    let con: Connection = connect_db(DATABASE_PATH);
+    let con: Connection = connect_db(&get_database_path());
     // Save the product to the database
     product.save(con);
 
@@ -98,7 +115,7 @@ fn save_product(product: Product) -> Product {
 
 #[tauri::command]
 fn delete_product(code: &str) -> bool {
-    let con: Connection = connect_db(DATABASE_PATH);
+    let con: Connection = connect_db(&get_database_path());
     let product = get_product_by_code(code);
     // Save the product to the database
     if let Some(product) = product {
@@ -110,19 +127,19 @@ fn delete_product(code: &str) -> bool {
 
 #[tauri::command]
 fn get_all_users() -> Vec<User> {
-    let con: Connection = connect_db(DATABASE_PATH);
+    let con: Connection = connect_db(&get_database_path());
     let users = user::get_all_users(&con);
     return users;
 }
 #[tauri::command]
 fn get_user_by_id(id: &str) -> Option<User> {
-    let con: Connection = connect_db(DATABASE_PATH);
+    let con: Connection = connect_db(&get_database_path());
     let user = user::get_user_by_id(id, &con);
     return user;
 }
 
 #[tauri::command]
 fn authenticate_user(username: &str, password: &str) -> Result<String, String> {
-    let con: Connection = connect_db(DATABASE_PATH);
+    let con: Connection = connect_db(&get_database_path());
     return login(username, password, &con);
 }
