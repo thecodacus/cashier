@@ -2,12 +2,14 @@ import { configureStore } from '@reduxjs/toolkit'
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 import { baseService } from './services/baseService'
 import { authSlice } from './services/authService'
+import { checkoutSlice } from './services/invoiceService'
 
 
 export const store = configureStore({
     reducer: {
         [baseService.reducerPath]: baseService.reducer,
-        auth: authSlice.reducer
+        auth: authSlice.reducer,
+        checkout: checkoutSlice.reducer
     },
     middleware: (getDefaultMiddleware) => {
         return getDefaultMiddleware().concat(baseService.middleware)

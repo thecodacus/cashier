@@ -32,7 +32,7 @@ export const baseService = createApi({
 
         }
     }),
-    tagTypes: ["Products", "Users"],
+    tagTypes: ["Products", "Users", "Invoices", "LineItems", "Customers"],
     endpoints: () => ({}),
     reducerPath: "touri"
 })

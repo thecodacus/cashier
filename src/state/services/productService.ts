@@ -13,7 +13,7 @@ const productService = baseService.injectEndpoints({
                 result ? [...result.map(({ code }) => ({ type: 'Products' as const, id: code })), 'Products']
                     : ['Products']
         }),
-        getProductByCode: build.query<IProduct, string>({
+        getProductByCode: build.query<IProduct | null, string>({
             query: (code) => ({
                 url: 'get_product_by_code',
                 method: 'POST',
@@ -55,3 +55,12 @@ export const {
     useAddProductMutation,
     useDeleteProductMutation
 } = productService
+
+
+export const {
+    getAllProducts,
+    getProductByCode,
+    saveProduct,
+    addProduct,
+    deleteProduct
+} = productService.endpoints

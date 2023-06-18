@@ -5,33 +5,51 @@ use serde::{Deserialize, Serialize};
 pub struct Product {
     pub code: Option<String>,
     pub name: String,
-    pub price: f32,
+    pub buyingPrice: f32,
+    pub sellingPrice: f32,
     pub category: Option<String>,
     pub quantity: i32,
 }
 
 impl Product {
-    pub fn save(&self, conn: Connection) {
+    pub fn save(&self, conn: &Connection) {
         conn.execute(
-            "INSERT OR REPLACE INTO products (code, name, price, category, quantity) VALUES (?, ?, ?, ?, ?)",
+            "INSERT OR REPLACE INTO products (code, name, buyingPrice, sellingPrice, category, quantity) VALUES (?, ?, ?,?, ?, ?)",
             params![
                 &self.code,
                 &self.name,
-                self.price,
+                self.buyingPrice,
+                self.sellingPrice,
                 &self.category,
                 &self.quantity
             ],
         ).unwrap();
     }
-    pub fn delete(&self, conn: Connection) {
+    pub fn delete(&self, conn: &Connection) {
         conn.execute("DELETE FROM products WHERE code = ?", params![&self.code])
             .unwrap();
     }
+    pub fn setup_db(conn: &Connection) {
+        print!("calling setup db \n");
+        let sql: &str = "
+            CREATE TABLE IF NOT EXISTS products (
+                code TEXT PRIMARY KEY,
+                name  TEXT NOT NULL,
+                buyingPrice REAL NOT NULL,
+                sellingPrice REAL NOT NULL,
+                category TEXT NULL,
+                quantity INTEGER NOT NULL
+            );
+        ";
+        let params: () = ();
+        let _result = conn.execute(sql, params).unwrap();
+        print!("setup db: [create products table] {_result}\n");
+    }
 }
 
-pub fn get_all_products(con: Connection) -> Vec<Product> {
+pub fn get_all_products(con: &Connection) -> Vec<Product> {
     let result: std::result::Result<rusqlite::Statement, Error> =
-        con.prepare("SELECT code,name,price,category,quantity  FROM products");
+        con.prepare("SELECT code,name,buyingPrice,sellingPrice,category,quantity  FROM products");
     let mut query: rusqlite::Statement = result.unwrap();
 
     let product_iter = query
@@ -39,9 +57,10 @@ pub fn get_all_products(con: Connection) -> Vec<Product> {
             Ok(Product {
                 code: row.get(0)?,
                 name: row.get(1)?,
-                price: row.get(2)?,
-                category: row.get(3)?,
-                quantity: row.get(4)?,
+                buyingPrice: row.get(2)?,
+                sellingPrice: row.get(3)?,
+                category: row.get(4)?,
+                quantity: row.get(5)?,
             })
         })
         .unwrap();
@@ -55,9 +74,10 @@ pub fn get_all_products(con: Connection) -> Vec<Product> {
     return result;
 }
 
-pub fn get_product_by_code(code: &str, con: Connection) -> Option<Product> {
-    let result: std::result::Result<rusqlite::Statement, Error> =
-        con.prepare("SELECT code,name,price,category,quantity  FROM products where code=?");
+pub fn get_product_by_code(code: &str, con: &Connection) -> Option<Product> {
+    let result: std::result::Result<rusqlite::Statement, Error> = con.prepare(
+        "SELECT code,name,buyingPrice,sellingPrice,category,quantity  FROM products where code=?",
+    );
     let mut query: rusqlite::Statement = result.unwrap();
 
     let product_iter = query
@@ -65,9 +85,10 @@ pub fn get_product_by_code(code: &str, con: Connection) -> Option<Product> {
             Ok(Product {
                 code: row.get(0)?,
                 name: row.get(1)?,
-                price: row.get(2)?,
-                category: row.get(3)?,
-                quantity: row.get(4)?,
+                buyingPrice: row.get(2)?,
+                sellingPrice: row.get(3)?,
+                category: row.get(4)?,
+                quantity: row.get(5)?,
             })
         })
         .unwrap();
