@@ -41,7 +41,10 @@ export default function SelectCustomer({ buyer }: IProps) {
 			return;
 		}
 		if (!phone) return;
-		if (phone == buyer?.phone) return;
+		if (phone == buyer?.phone) {
+			setIsNew(false);
+			return;
+		}
 		dispatch(getCustomerById.initiate(phone))
 			.unwrap()
 			.then((result) => {
@@ -54,6 +57,9 @@ export default function SelectCustomer({ buyer }: IProps) {
 				}
 			});
 	}, [phone]);
+	useEffect(() => {
+		if (buyer) setIsNew(false);
+	}, [buyer]);
 	return (
 		<form
 			onSubmit={(e) => {

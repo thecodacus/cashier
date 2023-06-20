@@ -1,4 +1,4 @@
-import { Input, Table, TableContainer, Tbody, Td, Tfoot, Th, Thead, Tr } from "@chakra-ui/react";
+import { Heading, Input, Table, TableContainer, Tbody, Td, Tfoot, Th, Thead, Tr } from "@chakra-ui/react";
 import { ILineItem } from "@src/models/IInvoice";
 import { IProduct } from "@src/models/IProduct";
 import { addLineItem, updateLineItem } from "@src/state/services/invoiceService";
@@ -92,7 +92,7 @@ export default function AddLineItemsForm() {
 			}}
 			style={{ margin: "auto", marginTop: "5rem" }}
 		>
-			{/* <Heading marginBottom={"4rem"}>Select Customer</Heading> */}
+			<Heading marginBottom={"1rem"}>Add Products</Heading>
 			<TableContainer>
 				<Table size="sm">
 					<Thead>
@@ -169,6 +169,9 @@ export default function AddLineItemsForm() {
 				</Table>
 			</TableContainer>
 			{/* Invoice data */}
+			<Heading marginBottom={"1rem"} marginTop={"2rem"}>
+				Invoice Details
+			</Heading>
 			<TableContainer>
 				<Table size="sm">
 					<Thead>
