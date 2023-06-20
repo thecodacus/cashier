@@ -4,10 +4,15 @@
 mod modules;
 
 use home;
-use modules::auth::{get_str_hash, login};
-use modules::models::product;
+use modules::auth::login;
+use modules::models::invoice::{self, Invoice, LineItem};
 use modules::models::product::Product;
-use modules::{database::connect_db, models::user, models::user::User};
+use modules::models::{customer, product};
+use modules::{
+    database::connect_db,
+    models::user,
+    models::{customer::Customer, user::User},
+};
 use rusqlite::{Connection, Result};
 use std::fs;
 use std::path::{Path, PathBuf};
@@ -22,7 +27,18 @@ fn main() {
             delete_product,
             get_all_users,
             get_user_by_id,
-            authenticate_user
+            authenticate_user,
+            get_all_invoices,
+            get_invoice_by_number,
+            save_invoice,
+            delete_invoice,
+            get_all_invoice_lineitems,
+            save_invoice_lineitems,
+            delete_lineitem,
+            get_all_customers,
+            get_customer_by_id,
+            save_customer,
+            delete_customer
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
@@ -45,70 +61,33 @@ fn get_database_path() -> String {
 }
 
 fn setup_db() -> Result<()> {
-    let con: Connection = connect_db(&get_database_path());
-    print!("calling setup db \n");
-    let sql: &str = "
-        CREATE TABLE IF NOT EXISTS products (
-            code TEXT PRIMARY KEY,
-            name  TEXT NOT NULL,
-            price REAL NOT NULL,
-            category TEXT NULL,
-            quantity INTEGER NOT NULL
-        );
-    ";
-    let params: () = ();
-    let _result = con.execute(sql, params)?;
-    print!("setup db: [create products table] {_result}\n");
-    let _result = con.execute(
-        "
-        CREATE TABLE IF NOT EXISTS users (
-                id TEXT PRIMARY KEY,
-                first_name  TEXT NOT NULL,
-                last_name TEXT NOT NULL,
-                password TEXT NOT NULL,
-                role TEXT NOT NULL
-            );
-    ",
-        (),
-    )?;
-    print!("setup db: [create users table] {_result}\n");
-    let pass_hash = get_str_hash("admin");
-    let _result = con.execute(
-        &format!(
-            "
-        INSERT INTO users (id, first_name, last_name, password, role) 
-             VALUES ('admin', 'admin', 'admin', '{pass_hash}', 'admin')
-             ON CONFLICT(id) DO UPDATE SET 
-             first_name = excluded.first_name, 
-             last_name = excluded.last_name, 
-             password = excluded.password, 
-             role = excluded.role;
-    "
-        ),
-        (),
-    )?;
-    print!("setup db: [create admin user] {_result}\n");
-
+    let conn: Connection = connect_db(&get_database_path());
+    Customer::setup_db(&conn);
+    Invoice::setup_db(&conn);
+    LineItem::setup_db(&conn);
+    Product::setup_db(&conn);
+    User::setup_db(&conn);
     Ok(())
 }
 
+//product commands
 #[tauri::command]
 fn get_all_products() -> Vec<Product> {
     let con: Connection = connect_db(&get_database_path());
-    return product::get_all_products(con);
+    return product::get_all_products(&con);
 }
 
 #[tauri::command]
 fn get_product_by_code(code: &str) -> Option<Product> {
     let con: Connection = connect_db(&get_database_path());
-    return product::get_product_by_code(code, con);
+    return product::get_product_by_code(code, &con);
 }
 
 #[tauri::command]
 fn save_product(product: Product) -> Product {
     let con: Connection = connect_db(&get_database_path());
     // Save the product to the database
-    product.save(con);
+    product.save(&con);
 
     product // Indicate success
 }
@@ -119,18 +98,20 @@ fn delete_product(code: &str) -> bool {
     let product = get_product_by_code(code);
     // Save the product to the database
     if let Some(product) = product {
-        product.delete(con);
+        product.delete(&con);
     }
 
     true // Indicate success
 }
 
+// user commands
 #[tauri::command]
 fn get_all_users() -> Vec<User> {
     let con: Connection = connect_db(&get_database_path());
     let users = user::get_all_users(&con);
     return users;
 }
+
 #[tauri::command]
 fn get_user_by_id(id: &str) -> Option<User> {
     let con: Connection = connect_db(&get_database_path());
@@ -142,4 +123,104 @@ fn get_user_by_id(id: &str) -> Option<User> {
 fn authenticate_user(username: &str, password: &str) -> Result<String, String> {
     let con: Connection = connect_db(&get_database_path());
     return login(username, password, &con);
+}
+
+//invoices command
+#[tauri::command]
+fn get_all_invoices() -> Vec<Invoice> {
+    let con: Connection = connect_db(&get_database_path());
+    return invoice::get_all_invoices(&con);
+}
+
+#[tauri::command]
+fn get_invoice_by_number(number: i32) -> Option<Invoice> {
+    let con: Connection = connect_db(&get_database_path());
+    return invoice::get_invoice_by_number(number, &con);
+}
+
+#[tauri::command]
+fn save_invoice(mut invoice: Invoice) -> Invoice {
+    let con: Connection = connect_db(&get_database_path());
+    // Save the invoice to the database
+    let number = invoice.save(&con);
+
+    invoice.number = Some(number); // Indicate success
+    return invoice;
+}
+
+#[tauri::command]
+fn delete_invoice(number: i32) -> bool {
+    let con: Connection = connect_db(&get_database_path());
+    let invoice = invoice::get_invoice_by_number(number, &con);
+    // Save the invoice to the database
+    if let Some(invoice) = invoice {
+        invoice.delete(&con);
+    }
+
+    true // Indicate success
+}
+
+// lineitems
+
+#[tauri::command]
+fn get_all_invoice_lineitems(number: i32) -> Vec<LineItem> {
+    let con: Connection = connect_db(&get_database_path());
+    return invoice::get_all_invoice_lineitems(number, &con);
+}
+
+#[tauri::command]
+fn save_invoice_lineitems(mut items: Vec<LineItem>) -> Vec<LineItem> {
+    let con: Connection = connect_db(&get_database_path());
+    // Save the invoice to the database
+    for item in &mut items {
+        let id = item.save(&con);
+        item.id = Some(id);
+    }
+    items
+}
+
+#[tauri::command]
+fn delete_lineitem(id: i32) -> bool {
+    let con: Connection = connect_db(&get_database_path());
+    let item: Option<LineItem> = invoice::get_line_item_by_id(id, &con);
+    // Save the invoice to the database
+    if let Some(item) = item {
+        item.delete(&con);
+    }
+
+    true // Indicate success
+}
+
+//customer commands
+#[tauri::command]
+fn get_all_customers() -> Vec<Customer> {
+    let con: Connection = connect_db(&get_database_path());
+    return customer::get_all_customers(&con);
+}
+
+#[tauri::command]
+fn get_customer_by_id(id: i64) -> Option<Customer> {
+    let con: Connection = connect_db(&get_database_path());
+    return customer::get_customers_by_phone(id, &con);
+}
+
+#[tauri::command]
+fn save_customer(customer: Customer) -> Customer {
+    let con: Connection = connect_db(&get_database_path());
+    // Save the invoice to the database
+    customer.save(&con);
+
+    customer // Indicate success
+}
+
+#[tauri::command]
+fn delete_customer(id: i64) -> bool {
+    let con: Connection = connect_db(&get_database_path());
+    let cust = customer::get_customers_by_phone(id, &con);
+    // Save the invoice to the database
+    if let Some(cust) = cust {
+        cust.delete(&con);
+    }
+
+    true // Indicate success
 }

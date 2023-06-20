@@ -40,7 +40,8 @@ export default function EditProduct({ product }: IProps) {
 			code: (event.target as any).code?.value,
 			name: (event.target as any).name?.value,
 			category: (event.target as any).category?.value,
-			price: parseFloat((event.target as any).price?.value || "0"),
+			buyingPrice: parseFloat((event.target as any).buyingPrice?.value || "0"),
+			sellingPrice: parseFloat((event.target as any).sellingPrice?.value || "0"),
 			quantity: parseInt((event.target as any).quantity?.value || "0"),
 		};
 		try {
@@ -84,8 +85,19 @@ export default function EditProduct({ product }: IProps) {
 								<FormHelperText>Enter the product category</FormHelperText>
 							</FormControl>
 							<FormControl isRequired>
-								<FormLabel>Price</FormLabel>
-								<NumberInput step={0.01} pattern="^\d*\.?\d*$" name="price" max={50000} min={0} defaultValue={product.price.toFixed(2)}>
+								<FormLabel>Buying Price</FormLabel>
+								<NumberInput step={0.01} pattern="^\d*\.?\d*$" name="buyingPrice" max={50000} min={0} defaultValue={product.buyingPrice.toFixed(2)}>
+									<NumberInputField />
+									<NumberInputStepper>
+										<NumberIncrementStepper />
+										<NumberDecrementStepper />
+									</NumberInputStepper>
+								</NumberInput>
+								<FormHelperText>Enter the product price</FormHelperText>
+							</FormControl>
+							<FormControl isRequired>
+								<FormLabel>Selling Price</FormLabel>
+								<NumberInput step={0.01} pattern="^\d*\.?\d*$" name="sellingPrice" max={50000} min={0} defaultValue={product.sellingPrice.toFixed(2)}>
 									<NumberInputField />
 									<NumberInputStepper>
 										<NumberIncrementStepper />

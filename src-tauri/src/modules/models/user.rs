@@ -1,3 +1,5 @@
+use crate::modules::auth::get_str_hash;
+
 use super::role::Role;
 
 use rusqlite::{params, Connection, Error};
@@ -56,6 +58,39 @@ impl User {
         conn.execute("DELETE FROM users WHERE id = ?", params![&self.id])?;
 
         Ok(())
+    }
+    pub fn setup_db(conn: &Connection) {
+        print!("calling setup db \n");
+        let sql: &str = "
+            CREATE TABLE IF NOT EXISTS users (
+                id TEXT PRIMARY KEY,
+                first_name  TEXT NOT NULL,
+                last_name TEXT NOT NULL,
+                password TEXT NOT NULL,
+                role TEXT NOT NULL
+            );
+        ";
+        let params: () = ();
+        let _result = conn.execute(sql, params).unwrap();
+        print!("setup db: [create users table] {_result}\n");
+        let pass_hash = get_str_hash("admin");
+        let _result = conn
+            .execute(
+                &format!(
+                    "
+                INSERT INTO users (id, first_name, last_name, password, role) 
+                        VALUES ('admin', 'admin', 'admin', '{pass_hash}', 'admin')
+                        ON CONFLICT(id) DO UPDATE SET 
+                        first_name = excluded.first_name, 
+                        last_name = excluded.last_name, 
+                        password = excluded.password, 
+                        role = excluded.role;
+                "
+                ),
+                (),
+            )
+            .unwrap();
+        print!("setup db: [create admin user] {_result}\n");
     }
 }
 

@@ -26,7 +26,8 @@ export default function ProductList({ items }: IProps) {
 						<Th>Product Code</Th>
 						<Th>Name</Th>
 						<Th>Category</Th>
-						<Th isNumeric>Price</Th>
+						<Th isNumeric>Buying Price</Th>
+						<Th isNumeric>Selling Price</Th>
 						<Th isNumeric>Available</Th>
 						<Th></Th>
 					</Tr>
@@ -38,7 +39,8 @@ export default function ProductList({ items }: IProps) {
 								<Td isTruncated>{item.code}</Td>
 								<Td isTruncated>{item.name}</Td>
 								<Td>{item.category}</Td>
-								<Td isNumeric>₹{item.price.toFixed(2)}</Td>
+								<Td isNumeric>₹{item.buyingPrice.toFixed(2)}</Td>
+								<Td isNumeric>₹{item.sellingPrice.toFixed(2)}</Td>
 								<Td isNumeric>{item.quantity}</Td>
 								<Td style={{ width: "1%" }}>
 									<EditProduct product={item} />

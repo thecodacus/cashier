@@ -11,7 +11,8 @@ export default function Home() {
 			code: "test",
 			name: "test",
 			category: "test",
-			price: 123,
+			buyingPrice: 123,
+			sellingPrice: 140,
 			quantity: 0,
 		})
 			.unwrap() // Unwrap the result to access the successful response

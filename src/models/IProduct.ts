@@ -1,7 +1,8 @@
 export interface IProduct {
     code?: string,
     name: string,
-    price: number,
+    buyingPrice: number,
+    sellingPrice: number,
     category: string,
     quantity: number,
 }
