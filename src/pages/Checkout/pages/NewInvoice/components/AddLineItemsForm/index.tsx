@@ -168,6 +168,34 @@ export default function AddLineItemsForm() {
 					</Tfoot>
 				</Table>
 			</TableContainer>
+			{/* Invoice data */}
+			<TableContainer>
+				<Table size="sm">
+					<Thead>
+						<Tr>
+							<Th>Order Number</Th>
+							<Th>Customer ID</Th>
+							<Th isNumeric>Sub Total</Th>
+							<Th isNumeric>CGST</Th>
+							<Th isNumeric>SGST</Th>
+							<Th isNumeric>IGST</Th>
+							<Th isNumeric>Total</Th>
+						</Tr>
+					</Thead>
+					<Tbody>
+						<Tr>
+							<Td>{invoice.data?.number}</Td>
+							<Td>{invoice.data?.buyer_id}</Td>
+							<Td isNumeric>{invoice.data?.subtotal}</Td>
+							<Td isNumeric>{invoice.data?.cgst}</Td>
+							<Td isNumeric>{invoice.data?.sgst}</Td>
+							<Td isNumeric>{invoice.data?.igst}</Td>
+							<Td isNumeric>{invoice.data?.total}</Td>
+						</Tr>
+					</Tbody>
+					<Tfoot></Tfoot>
+				</Table>
+			</TableContainer>
 		</form>
 	);
 }
