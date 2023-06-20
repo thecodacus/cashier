@@ -2,7 +2,7 @@ import { FormControl, FormLabel, Input, Heading, Button } from "@chakra-ui/react
 import { ICustomer } from "@src/models/ICustomer";
 import { getCustomerById, useAddCustomerMutation } from "@src/state/services/customerService";
 import { setBuyer } from "@src/state/services/invoiceService";
-import { useAppDispatch, useAppSelector } from "@src/state/store";
+import { useAppDispatch } from "@src/state/store";
 import { useEffect, useState } from "react";
 
 interface IProps {

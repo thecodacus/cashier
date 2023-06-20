@@ -1,8 +1,8 @@
-import { Heading, FormControl, FormLabel, Input, Button, Radio, RadioGroup, Stack } from "@chakra-ui/react";
+import { Heading, Button, Radio, RadioGroup, Stack } from "@chakra-ui/react";
 import { PaymentMode } from "@src/models/IInvoice";
 import { collectPayment } from "@src/state/services/invoiceService";
 import { useAppDispatch, useAppSelector } from "@src/state/store";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function CollectPayment() {
 	const [paymentMode, setPaymentMode] = useState<PaymentMode>();
