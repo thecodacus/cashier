@@ -298,11 +298,11 @@ export default function AddLineItemsForm() {
 						<Tr>
 							<Td>{invoice.data?.number}</Td>
 							<Td>{invoice.data?.buyer_id}</Td>
-							<Td isNumeric>{invoice.data?.subtotal}</Td>
-							<Td isNumeric>{(invoice.data?.subtotal || 0) * (invoice.data?.cgst || 0)}</Td>
-							<Td isNumeric>{(invoice.data?.subtotal || 0) * (invoice.data?.sgst || 0)}</Td>
-							<Td isNumeric>{(invoice.data?.subtotal || 0) * (invoice.data?.igst || 0)}</Td>
-							<Td isNumeric>{invoice.data?.total?.toFixed()}</Td>
+							<Td isNumeric>{invoice.data?.subtotal.toFixed(2)}</Td>
+							<Td isNumeric>{((invoice.data?.subtotal || 0) * (invoice.data?.cgst || 0)).toFixed(2)}</Td>
+							<Td isNumeric>{((invoice.data?.subtotal || 0) * (invoice.data?.sgst || 0)).toFixed(2)}</Td>
+							<Td isNumeric>{((invoice.data?.subtotal || 0) * (invoice.data?.igst || 0)).toFixed(2)}</Td>
+							<Td isNumeric>{invoice.data?.total?.toFixed(2)}</Td>
 						</Tr>
 					</Tbody>
 					<Tfoot></Tfoot>
