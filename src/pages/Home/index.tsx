@@ -6,25 +6,7 @@ export default function Home() {
 	const [count, setCount] = useState(0);
 	const { data } = useGetAllProductsQuery();
 	const [saveProduct] = useSaveProductMutation();
-	useEffect(() => {
-		saveProduct({
-			code: "test",
-			name: "test",
-			category: "test",
-			buyingPrice: 123,
-			sellingPrice: 140,
-			quantity: 0,
-		})
-			.unwrap() // Unwrap the result to access the successful response
-			.then((product) => {
-				// Handle success
-				console.log("Product created:", product);
-			})
-			.catch((error) => {
-				// Handle error
-				console.error("Product creation failed:", error);
-			});
-	}, []);
+
 	return (
 		<>
 			<div>{JSON.stringify(data)}</div>
