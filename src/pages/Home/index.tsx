@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "@chakra-ui/react";
-import { useGetAllProductsQuery, useSaveProductMutation } from "../../state/services/productService";
+import { useGetAllProductsQuery } from "../../state/services/productService";
 
 export default function Home() {
 	const [count, setCount] = useState(0);
 	const { data } = useGetAllProductsQuery();
-	const [saveProduct] = useSaveProductMutation();
+	// const [saveProduct] = useSaveProductMutation();
 
 	return (
 		<>
