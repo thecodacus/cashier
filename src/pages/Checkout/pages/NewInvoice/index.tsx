@@ -1,7 +1,6 @@
 import { Box, Button, Flex, Step, StepDescription, StepIcon, StepIndicator, StepNumber, StepSeparator, StepStatus, StepTitle, Stepper, useSteps } from "@chakra-ui/react";
 import SelectCustomer from "./components/SelectCustomer";
-import { useAppDispatch, useAppSelector } from "@src/state/store";
-import { deaftInvoice } from "@src/state/services/invoiceService";
+import { useAppSelector } from "@src/state/store";
 import AddLineItemsForm from "./components/AddLineItemsForm";
 import CollectPayment from "./components/CollectPayment";
 
@@ -18,7 +17,6 @@ export default function NewInvoice() {
 	});
 	const buyer = useAppSelector((s) => s.checkout.buyer);
 	const lineItems = useAppSelector((s) => s.checkout.lineItems);
-	const dispatch = useAppDispatch();
 	const nextBtn = (enable: boolean, onNext?: Function) => (
 		<Button
 			isDisabled={enable == false}

@@ -20,6 +20,9 @@ const customerService = baseService.injectEndpoints({
                 method: 'POST',
                 body: { id },
             }),
+            providesTags: (result) =>
+                result ? [{ type: 'Customers' as const, id: result.phone }]
+                    : ['Customers']
         }),
         addCustomer: build.mutation<boolean, ICustomer>({
             query: (customer) => ({
@@ -35,7 +38,7 @@ const customerService = baseService.injectEndpoints({
                 method: 'POST',
                 body: { customer },
             }),
-            invalidatesTags: (_result, _error, arg) => [{ type: 'Customers', id: arg.phone }],
+            invalidatesTags: ['Customers'],
         }),
         deleteCustomer: build.mutation<boolean, string>({
             query: (number) => ({
