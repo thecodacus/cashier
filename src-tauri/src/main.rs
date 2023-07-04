@@ -143,7 +143,6 @@ fn save_invoice(mut invoice: Invoice) -> Invoice {
     let con: Connection = connect_db(&get_database_path());
     // Save the invoice to the database
     let number = invoice.save(&con);
-
     invoice.number = Some(number); // Indicate success
     return invoice;
 }
@@ -169,14 +168,21 @@ fn get_all_invoice_lineitems(number: i32) -> Vec<LineItem> {
 }
 
 #[tauri::command]
-fn save_invoice_lineitems(mut items: Vec<LineItem>) -> Vec<LineItem> {
+fn save_invoice_lineitems(mut items: Vec<LineItem>) -> Result<Vec<LineItem>, std::string::String> {
     let con: Connection = connect_db(&get_database_path());
     // Save the invoice to the database
     for item in &mut items {
         let id = item.save(&con);
         item.id = Some(id);
+        let found_product_req = product::get_product_by_code(&item.productCode, &con);
+        if found_product_req.is_none() {
+            return Err("Product Code Not Found:".to_string() + &item.productCode);
+        }
+        let mut product = found_product_req.unwrap();
+        product.quantity = product.quantity - item.quantity as i32;
+        product.save(&con);
     }
-    items
+    return Ok(items);
 }
 
 #[tauri::command]

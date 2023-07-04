@@ -75,7 +75,7 @@ interface NavItemProps extends FlexProps {
 }
 const NavItem = ({ icon, url, children, ...rest }: NavItemProps) => {
 	return (
-		<NavLink to={url} className={styles.navItem} style={{ textDecoration: "none" }}>
+		<NavLink to={url} className={({ isActive, isPending }) => (isPending ? "pending" : isActive ? `${styles.active} ${styles.navItem}` : styles.navItem)} style={{ textDecoration: "none" }}>
 			<Flex
 				align="center"
 				p="4"

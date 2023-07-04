@@ -2,4 +2,11 @@
 	&:hover {
 		box-shadow: "none";
 	}
+	& > div {
+		margin-bottom: 0.5rem;
+	}
+	&.active > div {
+		background: var(--chakra-colors-cyan-400);
+		color: "white";
+	}
 }

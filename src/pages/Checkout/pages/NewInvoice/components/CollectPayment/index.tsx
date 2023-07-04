@@ -1,19 +1,38 @@
 import { Heading, Button, Radio, RadioGroup, Stack } from "@chakra-ui/react";
-import { PaymentMode } from "@src/models/IInvoice";
-import { collectPayment } from "@src/state/services/invoiceService";
+import { IInvoice, ILineItem, PaymentMode } from "@src/models/IInvoice";
+import { collectPayment, useAddInvoiceMutation, useSaveLineItemsMutation } from "@src/state/services/invoiceService";
 import { useAppDispatch, useAppSelector } from "@src/state/store";
 import { useEffect, useState } from "react";
 
 export default function CollectPayment() {
 	const [paymentMode, setPaymentMode] = useState<PaymentMode>();
 	const [paymentConplete, setPaymentConplete] = useState<boolean>(false);
+	const [invoiceSaveRequest, setInvoiceSaveRequest] = useState<IInvoice>();
+	const [addInvoice] = useAddInvoiceMutation();
+	const [saveLineItems] = useSaveLineItemsMutation();
 	const invoice = useAppSelector((s) => s.checkout.invoice.data);
+	const lineItems = useAppSelector((s) => s.checkout.lineItems.data);
 
 	const dispatch = useAppDispatch();
+	const saveInvoice = async (invoice: IInvoice, lineItems: ILineItem[]) => {
+		let savedInvoice = await addInvoice(invoice).unwrap();
+		console.log("addInvoice result", savedInvoice);
+		let updatedLineItems: ILineItem[] = lineItems.map((x) => ({
+			...x,
+			invoiceNumber: savedInvoice.number as number,
+		}));
+		let resultLineItems = await saveLineItems(updatedLineItems).unwrap();
+		console.log("saveLineItems result", resultLineItems);
+	};
 	const onPaymentCollect = () => {
-		if (!paymentMode) return;
+		if (!paymentMode || !invoice) return;
 		dispatch(collectPayment(paymentMode));
-		setPaymentConplete(true);
+		setInvoiceSaveRequest({
+			...invoice,
+			paid_by: paymentMode,
+		});
+
+		// setPaymentConplete(true);
 	};
 	useEffect(() => {
 		if (!invoice) return;
@@ -21,6 +40,10 @@ export default function CollectPayment() {
 		setPaymentMode(invoice.paid_by);
 		setPaymentConplete(true);
 	}, [invoice]);
+	useEffect(() => {
+		if (invoiceSaveRequest == undefined) return;
+		saveInvoice(invoiceSaveRequest, lineItems);
+	}, [invoiceSaveRequest]);
 	return (
 		<>
 			<form
@@ -30,18 +53,19 @@ export default function CollectPayment() {
 					if (paymentConplete) return;
 					onPaymentCollect();
 				}}
-				style={{ maxWidth: "20rem", margin: "auto", marginTop: "5rem" }}
+				style={{ maxWidth: "40rem", margin: "auto", marginTop: "5rem" }}
 			>
-				<Heading marginBottom={"4rem"}>Payment</Heading>
-				<RadioGroup onChange={(e) => setPaymentMode(e as PaymentMode)} value={paymentMode}>
-					<Stack direction="row">
+				<Heading marginBottom={"4rem"}>Select Payment Mode</Heading>
+
+				<RadioGroup onChange={(e) => setPaymentMode(e as PaymentMode)} value={paymentMode} style={{ marginBottom: "1rem" }}>
+					<Stack>
 						<Radio value={PaymentMode.CASH}>Cash</Radio>
 						<Radio value={PaymentMode.CARD}>Debit Card/ Credit Card</Radio>
 						<Radio value={PaymentMode.ONLINE}>Online</Radio>
-						<Radio value={PaymentMode.UPI}>Upi/Gpay/PhonePe</Radio>
+						<Radio value={PaymentMode.UPI}>UPI / GPay / PhonePe</Radio>
 					</Stack>
 				</RadioGroup>
-				<Button isDisabled={paymentConplete} type="submit">
+				<Button isDisabled={paymentConplete} type="submit" style={{ marginBottom: "1rem" }} bg={"cyan.400"}>
 					Collect Payment
 				</Button>
 				{paymentConplete && <Heading>Payment Done</Heading>}
