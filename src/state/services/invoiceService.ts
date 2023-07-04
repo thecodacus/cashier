@@ -23,7 +23,7 @@ const invoiceService = baseService.injectEndpoints({
                 body: { code },
             }),
         }),
-        addInvoice: build.mutation<boolean, IInvoice>({
+        addInvoice: build.mutation<IInvoice, IInvoice>({
             query: (invoice) => ({
                 url: 'save_invoice',
                 method: 'POST',
@@ -31,7 +31,7 @@ const invoiceService = baseService.injectEndpoints({
             }),
             invalidatesTags: ['Invoices'],
         }),
-        saveInvoice: build.mutation<boolean, IInvoice>({
+        saveInvoice: build.mutation<number, IInvoice>({
             query: (invoice) => ({
                 url: 'save_invoice',
                 method: 'POST',
@@ -54,7 +54,7 @@ const invoiceService = baseService.injectEndpoints({
                 body: {},
             }),
             providesTags: (result) =>
-                result ? [...result.map(({ id }) => ({ type: 'LineItems' as const, id: id })), 'LineItems']
+                result ? [...result.map(({ id }) => ({ type: 'LineItems' as const, id: id })), 'LineItems', 'Products']
                     : ['LineItems']
         }),
         saveLineItems: build.mutation<boolean, ILineItem[]>({

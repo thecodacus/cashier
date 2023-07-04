@@ -25,7 +25,7 @@ pub struct LineItem {
 pub struct Invoice {
     pub number: Option<i32>,
     pub buyer_id: i64,
-    pub date: i32,
+    pub date: i64,
     pub discount: f32,
     pub subtotal: f32,
     pub profit: f32,
@@ -251,7 +251,7 @@ impl LineItem {
                 igst, 
                 total
             ) 
-            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
                 params![
                     self.invoiceNumber,
                     &self.productCode,

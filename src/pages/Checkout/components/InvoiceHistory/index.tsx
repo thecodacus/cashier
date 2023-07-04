@@ -25,11 +25,11 @@ export default function InvoiceHistory({ items }: IProps) {
 					<Tr>
 						<Th>Invoice Number</Th>
 						<Th>Date</Th>
-						<Th isNumeric>Buyer Phone</Th>
+						<Th>Buyer Phone</Th>
 						<Th isNumeric>Sub Total</Th>
 						<Th isNumeric>Tax</Th>
 						<Th isNumeric>Total</Th>
-						<Th isNumeric>Payment Mode</Th>
+						<Th>Payment Mode</Th>
 						{/* <Th isNumeric>Profit</Th> */}
 						<Th></Th>
 					</Tr>
@@ -40,10 +40,11 @@ export default function InvoiceHistory({ items }: IProps) {
 							<Tr rounded="md" key={item.number} borderRadius={"md"}>
 								<Td isTruncated>{item.number}</Td>
 								<Td isTruncated>{new Date(item.date).toLocaleString()}</Td>
-								<Td isTruncated>{item.buyer_id}</Td>
-								<Td isTruncated>{item.cgst + item.sgst + item.igst}</Td>
-								<Td isTruncated>{item.total}</Td>
-								<Td isTruncated>{item.paid_by || "Not Paid"}</Td>
+								<Td>{item.buyer_id}</Td>
+								<Td isNumeric>{item.subtotal.toFixed(2)}</Td>
+								<Td isNumeric>{(item.cgst + item.sgst + item.igst).toFixed(2)}</Td>
+								<Td isNumeric>{item.total.toFixed(2)}</Td>
+								<Td>{item.paid_by || "Not Paid"}</Td>
 								<Td style={{ width: "1%" }}>
 									<IconButton aria-label="view item" icon={FaPaste} />
 								</Td>
