@@ -1,4 +1,4 @@
-import { Box, Table, TableCaption, TableContainer, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
+import { Table, TableCaption, TableContainer, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
 import { IProduct } from "@src/models/IProduct";
 import EditProduct from "../EditProduct";
 
