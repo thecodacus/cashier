@@ -7,7 +7,7 @@ interface IProps {
 }
 export default function InvoiceHistory({ items }: IProps) {
 	return (
-		<TableContainer>
+		<TableContainer maxHeight={"calc( 70vh - 100px)"} overflowY={"auto"}>
 			<Table
 				// display="inline-block"
 				// border="2px solid"
@@ -22,7 +22,7 @@ export default function InvoiceHistory({ items }: IProps) {
 			>
 				{(!items || items.length > 0) && <TableCaption>Invoice List</TableCaption>}
 				<Thead width={"full"}>
-					<Tr>
+					<Tr position={"sticky"} top={0} bg={"gray.900"}>
 						<Th>Invoice Number</Th>
 						<Th>Date</Th>
 						<Th>Buyer Phone</Th>
