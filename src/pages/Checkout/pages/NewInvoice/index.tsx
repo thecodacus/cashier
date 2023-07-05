@@ -24,6 +24,7 @@ export default function NewInvoice() {
 				setActiveStep((x) => x + 1);
 				if (onNext) onNext();
 			}}
+			colorScheme="cyan"
 		>
 			Next
 		</Button>

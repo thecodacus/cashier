@@ -1,4 +1,4 @@
-import { Table, TableCaption, TableContainer, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
+import { Box, Table, TableCaption, TableContainer, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
 import { IProduct } from "@src/models/IProduct";
 import EditProduct from "../EditProduct";
 
@@ -7,13 +7,14 @@ interface IProps {
 }
 export default function ProductList({ items }: IProps) {
 	return (
-		<TableContainer>
+		<TableContainer maxHeight={"calc( 70vh - 100px)"} overflowY={"auto"}>
 			<Table
 				// display="inline-block"
 				// border="2px solid"
 				// borderColor="gray.600"
 				// borderRadius="md"
 				// rounded="20px"
+
 				rounded="md"
 				variant="striped"
 				colorScheme="teal"
@@ -22,7 +23,7 @@ export default function ProductList({ items }: IProps) {
 			>
 				<TableCaption>Product List</TableCaption>
 				<Thead width={"full"}>
-					<Tr>
+					<Tr position={"sticky"} top={0} bg={"gray.900"}>
 						<Th>Product Code</Th>
 						<Th>Name</Th>
 						<Th>Category</Th>
@@ -32,7 +33,7 @@ export default function ProductList({ items }: IProps) {
 						<Th></Th>
 					</Tr>
 				</Thead>
-				<Tbody>
+				<Tbody maxHeight={"70vh"}>
 					{items.map((item) => {
 						return (
 							<Tr rounded="md" key={item.code} borderRadius={"md"}>

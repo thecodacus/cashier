@@ -17,6 +17,7 @@ export default function Checkout() {
 						dispatch(newCheckout());
 						navigate("new");
 					}}
+					colorScheme="cyan"
 				>
 					New Checkout
 				</Button>
