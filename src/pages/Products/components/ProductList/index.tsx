@@ -7,7 +7,7 @@ interface IProps {
 }
 export default function ProductList({ items }: IProps) {
 	return (
-		<TableContainer maxHeight={"calc( 70vh - 100px)"} overflowY={"auto"}>
+		<TableContainer maxHeight={"calc( 100vh - 250px)"} overflowY={"auto"}>
 			<Table
 				// display="inline-block"
 				// border="2px solid"

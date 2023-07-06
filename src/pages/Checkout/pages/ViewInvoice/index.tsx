@@ -44,7 +44,7 @@ export default function ViewInvoice() {
 						<InvoiceDetails invoice={invoice} buyer={buyer} />
 					</div>
 
-					<div style={{ width: "fit-content", minWidth: "20rem", marginTop: "1rem" }}>
+					<div style={{ minWidth: "20rem", marginTop: "1rem" }}>
 						<InvoiceItems items={lineitems} />
 					</div>
 				</>
