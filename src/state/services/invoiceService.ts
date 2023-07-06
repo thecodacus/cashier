@@ -16,11 +16,11 @@ const invoiceService = baseService.injectEndpoints({
                 result ? [...result.map(({ number }) => ({ type: 'Invoices' as const, id: number })), 'Invoices']
                     : ['Invoices']
         }),
-        getInvoiceByNumber: build.query<IInvoice, string>({
-            query: (code) => ({
+        getInvoiceByNumber: build.query<IInvoice, number>({
+            query: (number) => ({
                 url: 'get_invoice_by_number',
                 method: 'POST',
-                body: { code },
+                body: { number },
             }),
         }),
         addInvoice: build.mutation<IInvoice, IInvoice>({
@@ -47,11 +47,11 @@ const invoiceService = baseService.injectEndpoints({
             }),
             invalidatesTags: (_result, _error, arg) => [{ type: 'Invoices', id: arg }],
         }),
-        getAllInvoiceLineItems: build.query<ILineItem[], void>({
-            query: () => ({
+        getAllInvoiceLineItems: build.query<ILineItem[], number>({
+            query: (number) => ({
                 url: 'get_all_invoice_lineitems',
                 method: 'POST',
-                body: {},
+                body: { number },
             }),
             providesTags: (result) =>
                 result ? [...result.map(({ id }) => ({ type: 'LineItems' as const, id: id })), 'LineItems', 'Products']
@@ -81,6 +81,12 @@ export const {
     useGetAllInvoiceLineItemsQuery,
     useSaveLineItemsMutation
 } = invoiceService
+
+export const {
+    getAllInvoiceLineItems,
+} = invoiceService.endpoints
+
+
 
 function calculateInvoiceValues(lineItems: ILineItem[], invoice: IInvoice) {
     invoice.cgst = lineItems.map(x => x.cgst).reduce((a, v) => a + v, 0);

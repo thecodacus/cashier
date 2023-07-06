@@ -1,4 +1,4 @@
-import { Heading, Input, Table, TableContainer, Tbody, Td, Tfoot, Th, Thead, Tr } from "@chakra-ui/react";
+import { Card, CardBody, CardHeader, Heading, Input, Table, TableContainer, Tbody, Td, Tfoot, Th, Thead, Tr } from "@chakra-ui/react";
 import { ILineItem } from "@src/models/IInvoice";
 import { IProduct } from "@src/models/IProduct";
 import { addLineItem, updateLineItem } from "@src/state/services/invoiceService";
@@ -160,10 +160,48 @@ export default function AddLineItemsForm() {
 				e.stopPropagation();
 				onGenerateInvoice();
 			}}
-			style={{ margin: "auto", marginTop: "5rem" }}
+			style={{ margin: "auto", marginTop: "1rem" }}
 		>
-			<Heading marginBottom={"1rem"}>Add Products</Heading>
-			<TableContainer>
+			<Card minWidth="40rem" margin={"auto"}>
+				<CardHeader>
+					<Heading size="md">Invoice Details</Heading>
+				</CardHeader>
+
+				<CardBody>
+					<TableContainer>
+						<Table size="sm">
+							<Thead>
+								<Tr>
+									<Th>Order Number</Th>
+									<Th>Customer ID</Th>
+									<Th isNumeric>Sub Total</Th>
+									<Th isNumeric>CGST</Th>
+									<Th isNumeric>SGST</Th>
+									<Th isNumeric>IGST</Th>
+									<Th isNumeric>Total</Th>
+								</Tr>
+							</Thead>
+							<Tbody>
+								<Tr>
+									<Td>{invoice.data?.number}</Td>
+									<Td>{invoice.data?.buyer_id}</Td>
+									<Td isNumeric>{invoice.data?.subtotal.toFixed(2)}</Td>
+									<Td isNumeric>{((invoice.data?.subtotal || 0) * (invoice.data?.cgst || 0)).toFixed(2)}</Td>
+									<Td isNumeric>{((invoice.data?.subtotal || 0) * (invoice.data?.sgst || 0)).toFixed(2)}</Td>
+									<Td isNumeric>{((invoice.data?.subtotal || 0) * (invoice.data?.igst || 0)).toFixed(2)}</Td>
+									<Td isNumeric>{invoice.data?.total?.toFixed(2)}</Td>
+								</Tr>
+							</Tbody>
+							<Tfoot></Tfoot>
+						</Table>
+					</TableContainer>
+				</CardBody>
+			</Card>
+			<Heading marginTop={"2rem"} marginBottom={"1rem"} size={"md"}>
+				Items Added
+			</Heading>
+
+			<TableContainer maxHeight={"calc(100vh - 550px)"} overflowY={"auto"}>
 				<Table size="sm">
 					<Thead>
 						<Tr>
@@ -278,36 +316,9 @@ export default function AddLineItemsForm() {
 				</Table>
 			</TableContainer>
 			{/* Invoice data */}
-			<Heading marginBottom={"1rem"} marginTop={"2rem"}>
+			{/* <Heading marginBottom={"1rem"} marginTop={"2rem"}>
 				Invoice Details
-			</Heading>
-			<TableContainer>
-				<Table size="sm">
-					<Thead>
-						<Tr>
-							<Th>Order Number</Th>
-							<Th>Customer ID</Th>
-							<Th isNumeric>Sub Total</Th>
-							<Th isNumeric>CGST</Th>
-							<Th isNumeric>SGST</Th>
-							<Th isNumeric>IGST</Th>
-							<Th isNumeric>Total</Th>
-						</Tr>
-					</Thead>
-					<Tbody>
-						<Tr>
-							<Td>{invoice.data?.number}</Td>
-							<Td>{invoice.data?.buyer_id}</Td>
-							<Td isNumeric>{invoice.data?.subtotal.toFixed(2)}</Td>
-							<Td isNumeric>{((invoice.data?.subtotal || 0) * (invoice.data?.cgst || 0)).toFixed(2)}</Td>
-							<Td isNumeric>{((invoice.data?.subtotal || 0) * (invoice.data?.sgst || 0)).toFixed(2)}</Td>
-							<Td isNumeric>{((invoice.data?.subtotal || 0) * (invoice.data?.igst || 0)).toFixed(2)}</Td>
-							<Td isNumeric>{invoice.data?.total?.toFixed(2)}</Td>
-						</Tr>
-					</Tbody>
-					<Tfoot></Tfoot>
-				</Table>
-			</TableContainer>
+			</Heading> */}
 		</form>
 	);
 }

@@ -133,7 +133,7 @@ fn get_all_invoices() -> Vec<Invoice> {
 }
 
 #[tauri::command]
-fn get_invoice_by_number(number: i32) -> Option<Invoice> {
+fn get_invoice_by_number(number: i64) -> Option<Invoice> {
     let con: Connection = connect_db(&get_database_path());
     return invoice::get_invoice_by_number(number, &con);
 }
@@ -148,7 +148,7 @@ fn save_invoice(mut invoice: Invoice) -> Invoice {
 }
 
 #[tauri::command]
-fn delete_invoice(number: i32) -> bool {
+fn delete_invoice(number: i64) -> bool {
     let con: Connection = connect_db(&get_database_path());
     let invoice = invoice::get_invoice_by_number(number, &con);
     // Save the invoice to the database

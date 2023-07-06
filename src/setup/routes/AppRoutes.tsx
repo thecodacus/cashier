@@ -7,6 +7,7 @@ import Login from "../../pages/Auth/Login";
 import Signup from "../../pages/Auth/SignUp";
 import Checkout from "@src/pages/Checkout";
 import NewInvoice from "@src/pages/Checkout/pages/NewInvoice";
+import ViewInvoice from "@src/pages/Checkout/pages/ViewInvoice";
 
 export const router = createBrowserRouter([
 	{
@@ -48,6 +49,10 @@ export const router = createBrowserRouter([
 					{
 						path: "new",
 						element: <NewInvoice />,
+					},
+					{
+						path: ":number",
+						element: <ViewInvoice />,
 					},
 				],
 			},

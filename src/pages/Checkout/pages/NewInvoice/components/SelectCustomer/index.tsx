@@ -1,4 +1,4 @@
-import { FormControl, FormLabel, Input, Heading, Button } from "@chakra-ui/react";
+import { FormControl, FormLabel, Input, Heading, Button, Card, CardBody, CardHeader } from "@chakra-ui/react";
 import { ICustomer } from "@src/models/ICustomer";
 import { getCustomerById, useAddCustomerMutation } from "@src/state/services/customerService";
 import { setBuyer } from "@src/state/services/invoiceService";
@@ -61,35 +61,42 @@ export default function SelectCustomer({ buyer }: IProps) {
 		if (buyer) setIsNew(false);
 	}, [buyer]);
 	return (
-		<form
-			onSubmit={(e) => {
-				e.preventDefault();
-				e.stopPropagation();
-				onNewCustomer();
-			}}
-			style={{ maxWidth: "20rem", margin: "auto", marginTop: "5rem" }}
-		>
-			<Heading marginBottom={"4rem"}>Select Customer</Heading>
-			<FormControl isRequired>
-				<FormLabel>Phone Number</FormLabel>
-				<Input onChange={onPhoneChange} type="tel" pattern="^\d{10}$" value={phone || ""} placeholder="Phone" name="phone" marginBottom={"1rem"} />
-				{/* <NumberInput pattern="^\d*$" step={1} name="phone" max={500} min={0}>
+		<Card marginTop={"4rem"} minWidth="40rem" width={"fit-content"} margin={"auto"} padding={"2rem"}>
+			<CardHeader>
+				<Heading size="md">Select Customer</Heading>
+			</CardHeader>
+
+			<CardBody>
+				<form
+					onSubmit={(e) => {
+						e.preventDefault();
+						e.stopPropagation();
+						onNewCustomer();
+					}}
+					// style={{ maxWidth: "20rem" }}
+				>
+					<FormControl isRequired>
+						<FormLabel>Phone Number</FormLabel>
+						<Input onChange={onPhoneChange} type="tel" pattern="^\d{10}$" value={phone || ""} placeholder="Phone" name="phone" marginBottom={"1rem"} />
+						{/* <NumberInput pattern="^\d*$" step={1} name="phone" max={500} min={0}>
 					<NumberInputField />
 					<NumberInputStepper>
 						<NumberIncrementStepper />
 						<NumberDecrementStepper />
 					</NumberInputStepper>
 				</NumberInput> */}
-				<FormControl isRequired>
-					<FormLabel>Name</FormLabel>
-					<Input disabled={!isNew} placeholder="Name" name="name" value={name} onChange={(e) => setName(`${e.target.value}`)} />
-				</FormControl>
-			</FormControl>
-			{isNew && (
-				<Button type="submit" marginTop={"1rem"}>
-					Add New Customer
-				</Button>
-			)}
-		</form>
+						<FormControl isRequired>
+							<FormLabel>Name</FormLabel>
+							<Input disabled={!isNew} placeholder="Name" name="name" value={name} onChange={(e) => setName(`${e.target.value}`)} />
+						</FormControl>
+					</FormControl>
+					{isNew && (
+						<Button type="submit" marginTop={"1rem"}>
+							Add New Customer
+						</Button>
+					)}
+				</form>
+			</CardBody>
+		</Card>
 	);
 }

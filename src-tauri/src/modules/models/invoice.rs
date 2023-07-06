@@ -23,7 +23,7 @@ pub struct LineItem {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Invoice {
-    pub number: Option<i32>,
+    pub number: Option<i64>,
     pub buyer_id: i64,
     pub date: i64,
     pub discount: f32,
@@ -37,7 +37,7 @@ pub struct Invoice {
 }
 
 impl Invoice {
-    pub fn save(&self, conn: &Connection) -> i32 {
+    pub fn save(&self, conn: &Connection) -> i64 {
         if let Some(number) = self.number {
             conn.execute(
                 "INSERT OR REPLACE INTO invoices (
@@ -98,7 +98,7 @@ impl Invoice {
                 ],
             )
             .unwrap();
-            return conn.last_insert_rowid() as i32;
+            return conn.last_insert_rowid() as i64;
         }
     }
     pub fn delete(&self, conn: &Connection) {
@@ -164,9 +164,9 @@ pub fn get_all_invoices(con: &Connection) -> Vec<Invoice> {
     return result;
 }
 
-pub fn get_invoice_by_number(number: i32, con: &Connection) -> Option<Invoice> {
+pub fn get_invoice_by_number(number: i64, con: &Connection) -> Option<Invoice> {
     let result: std::result::Result<rusqlite::Statement, Error> = con.prepare(
-        "SELECT number, buyer_id, date, subtotal, discount,profit, cgst, sgst, igst, total,paid_by  FROM invoice where number=?",
+        "SELECT number, buyer_id, date, subtotal, discount,profit, cgst, sgst, igst, total,paid_by  FROM invoices where number=?",
     );
     let mut query: rusqlite::Statement = result.unwrap();
 
