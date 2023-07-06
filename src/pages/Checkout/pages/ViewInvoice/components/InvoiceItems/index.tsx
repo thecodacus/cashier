@@ -1,4 +1,4 @@
-import { TableContainer, Table, Thead, Tr, Th, Tbody, Td, Tfoot, Card, CardBody, CardHeader, Heading } from "@chakra-ui/react";
+import { TableContainer, Table, Thead, Tr, Th, Tbody, Td, Card, CardBody, CardHeader, Heading } from "@chakra-ui/react";
 import { ILineItem } from "@src/models/IInvoice";
 
 interface IProps {

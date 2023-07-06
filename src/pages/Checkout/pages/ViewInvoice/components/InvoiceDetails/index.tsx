@@ -1,4 +1,4 @@
-import { Box, Card, CardBody, CardHeader, Heading, Stack, StackDivider, Text } from "@chakra-ui/react";
+import { Box, Card, CardBody, CardHeader, Heading, Stack, Text } from "@chakra-ui/react";
 import { ICustomer } from "@src/models/ICustomer";
 import { IInvoice } from "@src/models/IInvoice";
 
