@@ -1,6 +1,6 @@
 import { TableContainer, Table, TableCaption, Thead, Tr, Th, Tbody, Td, IconButton } from "@chakra-ui/react";
 import { IInvoice } from "@src/models/IInvoice";
-import { FaPaste } from "react-icons/fa";
+import { FaEye } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 interface IProps {
@@ -48,7 +48,7 @@ export default function InvoiceHistory({ items }: IProps) {
 								<Td isNumeric>{item.total.toFixed(2)}</Td>
 								<Td>{item.paid_by || "Not Paid"}</Td>
 								<Td style={{ width: "1%" }}>
-									<IconButton onClick={() => navigator(`${item.number}`)} aria-label="view item" icon={FaPaste} />
+									<IconButton onClick={() => navigator(`${item.number}`)} aria-label="view item" icon={<FaEye />} />
 								</Td>
 							</Tr>
 						);
