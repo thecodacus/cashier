@@ -159,7 +159,7 @@ export default function AddProduct() {
 									onChange={(e) => {
 										setGroupDetails((details) => {
 											let data = { ...details };
-											data.name = `${(e.currentTarget as any).value || ""}`;
+											data.name = `${(e.target as any).value || ""}`;
 											return data;
 										});
 									}}
