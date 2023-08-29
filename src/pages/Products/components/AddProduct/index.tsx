@@ -73,7 +73,7 @@ export default function AddProduct() {
 			},
 			input: (styles) => ({ ...styles }),
 			placeholder: (styles) => ({ ...styles }),
-			singleValue: (styles, { data }) => ({ ...styles, color: fontColor }),
+			singleValue: (styles) => ({ ...styles, color: fontColor }),
 		};
 		return colourStyles;
 	};
