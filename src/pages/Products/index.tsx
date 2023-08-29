@@ -10,6 +10,7 @@ export default function Products() {
 			<Flex flexDirection={"row-reverse"} mb={"2rem"}>
 				<AddProduct />
 			</Flex>
+
 			{data && <ProductList items={data} />}
 		</>
 	);

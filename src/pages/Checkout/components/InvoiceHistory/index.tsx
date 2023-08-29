@@ -18,7 +18,7 @@ export default function InvoiceHistory({ items }: IProps) {
 				// rounded="20px"
 				rounded="md"
 				variant="striped"
-				colorScheme="teal"
+				colorScheme="cyan"
 				width={"full"}
 				size="md"
 			>
