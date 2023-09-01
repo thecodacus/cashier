@@ -292,8 +292,10 @@ export default function AddLineItemsForm() {
 									ref={inputBox}
 									width={"10rem"}
 									type="text"
-									onChange={(e) => {
-										setItemCode(e.target.value);
+									onKeyUp={(e) => {
+										if (e.key === "Enter") {
+											setItemCode(inputBox.current?.value);
+										}
 									}}
 								/>
 							</Td>
