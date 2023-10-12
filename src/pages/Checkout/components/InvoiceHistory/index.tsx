@@ -23,7 +23,7 @@ export default function InvoiceHistory({ items }: IProps) {
 				size="md"
 			>
 				{(!items || items.length > 0) && <TableCaption>Invoice List</TableCaption>}
-				<Thead width={"full"}>
+				<Thead style={{ zIndex: 100 }} width={"full"}>
 					<Tr position={"sticky"} top={0} bg={"gray.900"}>
 						<Th>Invoice Number</Th>
 						<Th>Date</Th>

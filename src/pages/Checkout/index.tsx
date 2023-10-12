@@ -22,7 +22,7 @@ export default function Checkout() {
 					New Checkout
 				</Button>
 			</Flex>
-			{data && <InvoiceHistory items={data} />}
+			{data && <InvoiceHistory items={[...data].reverse()} />}
 			{(!data || data.length == 0) && !isLoading && <Heading>No Invoice Available</Heading>}
 		</>
 	);

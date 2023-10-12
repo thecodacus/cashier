@@ -180,7 +180,7 @@ export default function AddProduct() {
 
 										setGroupDetails((details) => {
 											let data = { ...details };
-											data.category = `${selectedItem.value || ""}`;
+											data.category = `${selectedItem?.value || ""}`;
 											return data;
 										});
 									}}

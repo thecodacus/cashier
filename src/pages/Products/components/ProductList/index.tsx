@@ -36,8 +36,9 @@ export default function ProductList({ items }: IProps) {
 				size="md"
 			>
 				<TableCaption>Product List</TableCaption>
-				<Thead position={"sticky"} width={"full"}>
+				<Thead style={{ zIndex: 100 }} position={"sticky"} width={"full"}>
 					<Tr position={"sticky"} top={0} bg={"gray.900"}>
+						<Th width={"min-content"}>Serial</Th>
 						<Th width={"min-content"}>Product Code</Th>
 						<Th>Name</Th>
 						<Th>Category</Th>
@@ -47,6 +48,7 @@ export default function ProductList({ items }: IProps) {
 						<Th></Th>
 					</Tr>
 					<Tr position={"sticky"} top={"2.5rem"} bg={"gray.900"}>
+						<Th width={"20px"}></Th>
 						<Th width={"min-content"}>
 							<Input
 								onChange={(e) => {
@@ -87,9 +89,10 @@ export default function ProductList({ items }: IProps) {
 					</Tr>
 				</Thead>
 				<Tbody maxHeight={"70vh"}>
-					{filteredProducts.map((item) => {
+					{filteredProducts.map((item, i) => {
 						return (
 							<Tr rounded="md" key={item.code} borderRadius={"md"}>
+								<Td isTruncated>{i + 1}</Td>
 								<Td isTruncated>{item.code}</Td>
 								<Td isTruncated>{item.name}</Td>
 								<Td>{item.category}</Td>

@@ -39,17 +39,7 @@ export default function Home() {
 					/>
 				</Box>
 				<Box className="chart2" flex={1}>
-					<RecentCustomersTable
-						header="Recent Customers"
-						items={[
-							{
-								id: 1,
-								customerName: "Anirban",
-								orderDate: new Date(),
-								amount: 2000,
-							},
-						]}
-					/>
+					<RecentCustomersTable header="Recent Customers" />
 				</Box>
 			</Flex>
 
