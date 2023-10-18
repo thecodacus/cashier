@@ -192,6 +192,11 @@ export const checkoutSlice = createSlice({
             if (!state.invoice.data) return;
             state.invoice.data = calculateInvoiceValues(state.lineItems.data, state.invoice.data)
         },
+        deleteLineItem: (state, action: PayloadAction<string>) => {
+            state.lineItems.data = state.lineItems.data.filter(x => x.productCode != action.payload);
+            if (!state.invoice.data) return;
+            state.invoice.data = calculateInvoiceValues(state.lineItems.data, state.invoice.data)
+        },
         collectPayment: (state, action: PayloadAction<PaymentMode>) => {
             if (!state.invoice.data) return;
             state.invoice.data.paid_by = action.payload
@@ -221,6 +226,7 @@ export const {
     deaftInvoice,
     addLineItem,
     updateLineItem,
+    deleteLineItem,
     collectPayment
 } = checkoutSlice.actions;
 

@@ -1,10 +1,11 @@
-import { Card, CardBody, CardHeader, Heading, Input, Table, TableContainer, Tbody, Td, Tfoot, Th, Thead, Tr } from "@chakra-ui/react";
+import { Card, CardBody, CardHeader, Heading, IconButton, Input, Table, TableContainer, Tbody, Td, Tfoot, Th, Thead, Tr } from "@chakra-ui/react";
 import { ILineItem } from "@src/models/IInvoice";
 import { IProduct } from "@src/models/IProduct";
-import { addLineItem, updateLineItem } from "@src/state/services/invoiceService";
+import { addLineItem, deleteLineItem, updateLineItem } from "@src/state/services/invoiceService";
 import { getProductByCode } from "@src/state/services/productService";
 import { useAppDispatch, useAppSelector } from "@src/state/store";
 import { useEffect, useRef, useState } from "react";
+import { BiTrash } from "react-icons/bi";
 
 export default function AddLineItemsForm() {
 	const lineItems = useAppSelector((s) => s.checkout.lineItems);
@@ -120,12 +121,14 @@ export default function AddLineItemsForm() {
 		if (itemCode == undefined) return;
 		if (invoice.data == null) return;
 		if (`${itemCode}`.trim().length == 0) return;
-
+		let code = itemCode;
 		dispatch(getProductByCode.initiate(itemCode))
 			.unwrap()
 			.then((product) => {
+				console.log(product);
+
 				if (product) {
-					let item = lineItems.data.find((i) => i.productCode == itemCode);
+					let item = lineItems.data.find((i) => i.productCode == code);
 					if (item) {
 						let options = getDefaultLineItemValues(product);
 						let newItem = calculateLineValues({
@@ -151,7 +154,8 @@ export default function AddLineItemsForm() {
 						inputBox.current.value = "";
 					}
 				}
-			});
+			})
+			.then(() => setItemCode(undefined));
 	}, [itemCode]);
 	return (
 		<form
@@ -215,6 +219,7 @@ export default function AddLineItemsForm() {
 							<Th>Tax Rate (%)</Th>
 							<Th>Tax ₹</Th>
 							<Th>Total ₹</Th>
+							<Th></Th>
 						</Tr>
 					</Thead>
 					<Tbody>
@@ -282,6 +287,16 @@ export default function AddLineItemsForm() {
 									</Td>
 									<Td>{((item.cgst + item.sgst + item.igst) * item.subtotal).toFixed(2)}</Td>
 									<Td>{item.total.toFixed(2)}</Td>
+									<Td>
+										{" "}
+										<IconButton
+											aria-label="Delete Item"
+											onClick={(e) => {
+												dispatch(deleteLineItem(item.productCode));
+											}}
+											icon={<BiTrash />}
+										/>
+									</Td>
 								</Tr>
 							);
 						})}
