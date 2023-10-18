@@ -292,6 +292,8 @@ export default function AddLineItemsForm() {
 										<IconButton
 											aria-label="Delete Item"
 											onClick={(e) => {
+												e.stopPropagation();
+												e.preventDefault();
 												dispatch(deleteLineItem(item.productCode));
 											}}
 											icon={<BiTrash />}
